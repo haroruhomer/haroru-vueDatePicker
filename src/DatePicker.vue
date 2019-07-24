@@ -77,7 +77,7 @@ export default {
       let end = moment(momentDate.endOf('month'))
       let rango = moment().range(start, end)
       for (let week of rango.by('week')) {
-        let weekNumber = week.format('w')
+        let weekNumber = week.format('ww')
         objFechas[weekNumber] = []
         let startWeek = week.startOf('week')
         let endWeek = week.clone().endOf('week')
@@ -128,12 +128,9 @@ export default {
       let parent = event.explicitOriginalTarget.parentNode
       let value = false
       if (parent == document) {
-        console.log("if");
         value = false
       }else {
-        console.log('else');
         if (parent.closest('.comp-datepicker')) {
-          console.log('else > if');
           value = true
         }
       }
@@ -178,6 +175,9 @@ $dark-grey-2: #757575;
     background: $light-grey;
     transition: 'height' 500ms;
     box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    .nav::selection{
+      background: transparent;
+    }
     .year-name {
         @include header;
         font-size: 10px;
@@ -187,7 +187,7 @@ $dark-grey-2: #757575;
     }
     .month-name {
         @include header;
-        font-size: 20px;
+        font-size: 15px;
         .nav {
             cursor: pointer;
         }
