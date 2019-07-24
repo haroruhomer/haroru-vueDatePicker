@@ -1,6 +1,6 @@
 <template>
 <div class="comp-datepicker" >
-  <input type="text" @click="show = !show" name="" v-model="selectedDate">
+  <input ref="input" type="text" @click.stop="show = !show" @blur="evaluateBlur" name="" v-model="selectedDate">
   <div class='container' v-show="show">
     <div class='calendar'>
       <div class='month-name'>
@@ -15,13 +15,13 @@
       </div>
       <div class='header-month'>
         <div class="day-of-week">#</div>
-        <div class='day-of-week'>Sun</div>
-        <div class='day-of-week'>Mon</div>
-        <div class='day-of-week'>Tue</div>
-        <div class='day-of-week'>Wed</div>
-        <div class='day-of-week'>Thu</div>
-        <div class='day-of-week'>Fri</div>
-        <div class='day-of-week'>Sat</div>
+        <div class='day-of-week'>S</div>
+        <div class='day-of-week'>M</div>
+        <div class='day-of-week'>T</div>
+        <div class='day-of-week'>W</div>
+        <div class='day-of-week'>T</div>
+        <div class='day-of-week'>F</div>
+        <div class='day-of-week'>S</div>
       </div>
       <div class="week" v-for="(dates, week) in currentMonthDates" :key="week.key">
         <div class="day week-number">{{week}}</div>
@@ -107,6 +107,7 @@ export default {
       }else {
         this.selectedDate = momentDate.subtract(1,'M').format(this.format)
       }
+      this.$nextTick(() => this.$refs.input.focus())
     },
     changeYear(num){
       var momentDate = moment(this.selectedDate, this.format);
@@ -115,11 +116,29 @@ export default {
       }else {
         this.selectedDate = momentDate.subtract(1,'y').format(this.format)
       }
+      this.$nextTick(() => this.$refs.input.focus())
     },
     changeSelectedDate(date){
       this.show          = false
       console.log(this.show);
       this.selectedDate  = date.format(this.format);
+    },
+    evaluateBlur(event)
+    {
+      let parent = event.explicitOriginalTarget.parentNode
+      let value = false
+      if (parent == document) {
+        console.log("if");
+        value = false
+      }else {
+        console.log('else');
+        if (parent.closest('.comp-datepicker')) {
+          console.log('else > if');
+          value = true
+        }
+      }
+      this.show = value
+      return
     }
   }
 }
