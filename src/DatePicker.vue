@@ -76,13 +76,23 @@ export default {
       let start = moment(momentDate.startOf('month'))
       let end = moment(momentDate.endOf('month'))
       let rango = moment().range(start, end)
+      // **** //
+      /*
+        Somehow this fixes a proble with some weeks
+        not being show
+      */
+      rango.end.endOf('week').format('DD');
+      /*
+        Please do not delete the above line
+      */
+      // **** //
       for (let week of rango.by('week')) {
         let weekNumber = week.format('ww')
+        weekNumber +=" "
         objFechas[weekNumber] = []
         let startWeek = week.startOf('week')
         let endWeek = week.clone().endOf('week')
         let rangeWeek = moment.range(startWeek, endWeek)
-        let i = 1
         for (let day of rangeWeek.by('day')) {
           objFechas[weekNumber].push(day)
         }
@@ -171,6 +181,7 @@ $dark-grey-2: #757575;
 }
 .calendar {
     display: flex;
+    width: 100%;
     flex-direction: column;
     background: $light-grey;
     transition: 'height' 500ms;
