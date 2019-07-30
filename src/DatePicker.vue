@@ -14,7 +14,7 @@
         <a class='nav next' @click="changeYear(+1)">&gt</a>
       </div>
       <div class='header-month'>
-        <div class="day-of-week">#</div>
+        <div class="day-of-week" v-show="weekShow">#</div>
         <div class='day-of-week'>S</div>
         <div class='day-of-week'>M</div>
         <div class='day-of-week'>T</div>
@@ -24,7 +24,7 @@
         <div class='day-of-week'>S</div>
       </div>
       <div class="week" v-for="(dates, week) in currentMonthDates" :key="week.key">
-        <div class="day week-number">{{week}}</div>
+        <div class="day week-number" v-show="weekShow">{{week}}</div>
         <div class="day" :class="{other: date.format('MM') != currentNames.selectedMonth,
                                   today: date.format(format) == today}"
              v-for="date in dates" :key="date.key"
