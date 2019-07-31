@@ -1,4 +1,4 @@
-import haroruVueDatePicker from './datePicker'
+import haroruVueDatePicker from './DatePicker'
 
 const dp = haroruVueDatePicker;
 

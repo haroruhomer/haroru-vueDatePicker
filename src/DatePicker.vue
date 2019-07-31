@@ -36,7 +36,7 @@
   </div>
 </div>
 </template>
-<script type="text/babel">
+<script>
 // import langSets from './dataMap/langSets'
 import Moment from 'moment';
 import {

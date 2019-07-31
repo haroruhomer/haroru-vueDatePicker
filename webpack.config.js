@@ -1,12 +1,13 @@
 var path    = require('path');
 var webpack = require('webpack');
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
 module.exports = {
   devtool: 'source-map',
 	entry:'./demo/main.js',
 	output:{
 		path:path.resolve(__dirname, 'static'),
-    publichPath : '/static/',
+    publicPath : '/static/',
 		filename:'bundle.js'
 	},
 	plugins : [
@@ -15,44 +16,53 @@ module.exports = {
     })
   ],
   resolve: {
-    extensions: ['', '.js', '.vue'],
+    extensions: ['.js', '.vue'],
     alias: {
       'src' : path.resolve(__dirname, './src'),
       'dist' : path.resolve(__dirname, './dist')
     }
   },
 	module:{
-    loaders:[
+    rules:[
       {
         test:/\.js$/,
         exclude:/node_modules/,
-        loader:'babel?presets[]=es2015'
+        use: {
+          loader: 'babel-loader',
+          options : {
+            // presets: ['es2015'],
+            plugins: ['@babel/plugin-transform-runtime']
+          }
+        }
       },
       {
         test:/\.vue$/,
-        loader:'vue'
+        use:'vue-loader'
       },{
         test:/\.scss$/,
-        loader:'style!css!sass'
+        loader:'style-loader!css-loader!sass-loader'
       },
       {
         test:/\.css$/,
-        loader:'style!css'
+        loader:'style-loader!css-loader'
       }
     ]
   },
-  vue: {
-    autoprefixer: {
-      browsers: ['> 1%']
-    },
-    loaders: {
-      scss: 'style!css!sass'
-    }
-  },
-  babel: {
-    presets: ['es2015'],
-    plugins: ['transform-runtime']
-  },
+  plugins : [
+    new VueLoaderPlugin()
+  ],
+  // vue: {
+  //   autoprefixer: {
+  //     browsers: ['> 1%']
+  //   },
+  //   loaders: {
+  //     scss: 'style!css!sass'
+  //   }
+  // },
+  // babel: {
+  //   presets: ['es2015'],
+  //   plugins: ['transform-runtime']
+  // },
   devServer: {
     port : 8070,
     historyApiFallback: true,

@@ -12,7 +12,7 @@ export default {
         }
 	},
   components : {
-    'h-datepicker' : require('src/DatePicker')
+    'h-datepicker' : require('../src/DatePicker.vue').default
   }
 }
 </script>

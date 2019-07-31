@@ -9,7 +9,7 @@ import App from './app'
 //   }
 // })
 
-new Vue({
+let vue = new Vue({
   el : '#app',
   render: h => h(App),
   template : '<App/>',
@@ -17,5 +17,3 @@ new Vue({
     App
   }
 });
-
-
