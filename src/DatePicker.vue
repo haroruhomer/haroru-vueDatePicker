@@ -15,13 +15,9 @@
       </div>
       <div class='header-month'>
         <div class="day-of-week" v-show="weekShow">#</div>
-        <div class='day-of-week'>S</div>
-        <div class='day-of-week'>M</div>
-        <div class='day-of-week'>T</div>
-        <div class='day-of-week'>W</div>
-        <div class='day-of-week'>T</div>
-        <div class='day-of-week'>F</div>
-        <div class='day-of-week'>S</div>
+        <div class="day-of-week" v-for="days in daysArray">
+          {{days}}
+        </div>
       </div>
       <div class="week" v-for="(dates, week) in currentMonthDates" :key="week.key">
         <div class="day week-number" v-show="weekShow">{{week}}</div>
@@ -43,7 +39,7 @@ import {
   extendMoment
 } from 'moment-range';
 const moment = extendMoment(Moment);
-
+const locales = moment.locales()
 export default {
   props: {
     format: {
@@ -53,6 +49,17 @@ export default {
     weekShow: {
       type: Boolean,
       default: false
+    },
+    locale:{
+      type: String,
+      default : 'es'
+    },
+    initialday:{
+      type : Number,
+      validator : function (value) {
+        return [0,1].indexOf(value) !== -1
+      },
+      default : 0
     }
   },
   data() {
@@ -64,7 +71,12 @@ export default {
     }
   },
   created() {
-    moment.locale('es')
+    moment.locale(this.locale)
+    moment.updateLocale(this.locale,{
+      week : {
+        dow : this.initialday
+      }
+    })
     this.today = moment().format(this.format);
     this.selectedDate = this.today;
     this.selectedMoment = moment(this.selectedDate, this.format);
@@ -107,6 +119,13 @@ export default {
         monthName: moment(date, this.format).format('MMMM'),
       }
       return result
+    },
+    daysArray(){
+      let days = []
+      for (var i = 0; i <=6 ; i++) {
+        days.push(moment().weekday(i).format('dd'))
+      }
+      return days
     }
   },
   methods:{
