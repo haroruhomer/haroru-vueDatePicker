@@ -31,6 +31,8 @@
 | initialday | Sets the first day of the week 0-Sunday 1-Monday... | Number | 0 |
 |locale|Any locale admited by moment|String|"en"|
 |weekShow| Allows to show the week number | Boolean | false |
+|name| Name for the input | String | "date" |
+|value(v-model)| Value to set/return date | String | Today |
 
 ## Dev Setup
 
