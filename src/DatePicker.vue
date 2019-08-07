@@ -52,12 +52,12 @@ export default {
     },
     locale:{
       type: String,
-      default : 'es'
+      default : 'en'
     },
     initialday:{
       type : Number,
       validator : function (value) {
-        return [0,1].indexOf(value) !== -1
+        return [0,1,2,3,4,5,6].indexOf(value) !== -1
       },
       default : 0
     }
@@ -90,7 +90,7 @@ export default {
       let rango = moment().range(start, end)
       // **** //
       /*
-        Somehow this fixes a proble with some weeks
+        Somehow this fixes a problem with some weeks
         not being show
       */
       rango.end.endOf('week').format('DD');
