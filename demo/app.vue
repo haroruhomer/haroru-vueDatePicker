@@ -1,23 +1,24 @@
 <template>
   <div>
-    <h-datepicker>
+    <h-datepicker :weekShow="true" v-model="modelo">
     </h-datepicker>
   </div>
 </template>
 <script>
 
 export default {
-	data () {
-		return {
-        }
-	},
+  data () {
+    return {
+      modelo: "02/08/2019"
+    }
+  },
   components : {
     'h-datepicker' : require('../src/DatePicker.vue').default
   }
 }
 </script>
 <style lang='scss'>
-  .app{
-    color:green;
-  }
+.app{
+  color:green;
+}
 </style>

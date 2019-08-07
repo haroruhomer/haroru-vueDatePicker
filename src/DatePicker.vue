@@ -1,6 +1,6 @@
 <template>
 <div class="comp-datepicker" >
-  <input ref="input" type="text" @click.stop="show = !show" @blur="evaluateBlur" name="" v-model="selectedDate">
+  <input ref="input" type="text" @click.stop="show = !show" @blur="evaluateBlur" :name="name" v-model="value">
   <div class='container' v-show="show">
     <div class='calendar'>
       <div class='month-name'>
@@ -14,7 +14,7 @@
         <a class='nav next' @click="changeYear(+1)">&gt</a>
       </div>
       <div class='header-month'>
-        <div class="day-of-week" v-show="weekShow">#</div>
+        <div class="day-of-week week-number" v-show="weekShow">#</div>
         <div class="day-of-week" v-for="days in daysArray">
           {{days}}
         </div>
@@ -22,7 +22,8 @@
       <div class="week" v-for="(dates, week) in currentMonthDates" :key="week.key">
         <div class="day week-number" v-show="weekShow">{{week}}</div>
         <div class="day" :class="{other: date.format('MM') != currentNames.selectedMonth,
-                                  today: date.format(format) == today}"
+                                  today: date.format(format) == today,
+                                  selected: date.format(format) == selectedMoment.format(format)}"
              v-for="date in dates" :key="date.key"
              @click="changeSelectedDate(date)">
           {{date.format('DD')}}
@@ -60,14 +61,21 @@ export default {
         return [0,1,2,3,4,5,6].indexOf(value) !== -1
       },
       default : 0
+    },
+    name:{
+      type: String,
+      default: "date"
+    },
+    value : {
+      type: String,
+      default: ""
     }
   },
   data() {
     return {
       show: false,
       today: "",
-      selectedDate: "",
-
+      selectedDate: this.value
     }
   },
   created() {
@@ -77,8 +85,11 @@ export default {
         dow : this.initialday
       }
     })
+    console.log(this.value);
     this.today = moment().format(this.format);
-    this.selectedDate = this.today;
+    if (!moment(this.selectedDate, this.format).isValid()) {
+      this.selectedDate = this.today;
+    }
     this.selectedMoment = moment(this.selectedDate, this.format);
   },
   computed: {
@@ -166,17 +177,22 @@ export default {
       this.show = value
       return
     }
+  },
+  watch: {
+    selectedDate(val) {
+      this.$emit('input', val)
+    }
   }
 }
 </script>
 
 <style lang="scss">
-$red: #F44336;
+$red: #ab5955;
 $grey: #E0E0E0;
 $light-grey: #E0E0E0;
 $white: #FAFAFA;
-$dark-grey: #212121;
-$dark-grey-2: #757575;
+$dark-grey: #4d4d4d;
+$dark-grey-2: #a2a2a2;
 
 @mixin position-center() {
     display: flex;
@@ -184,9 +200,6 @@ $dark-grey-2: #757575;
     //  justify-content: center;
 }
 
-.container {
-    @include position-center;
-}
 @mixin header() {
     display: flex;
     justify-content: space-between;
@@ -198,7 +211,14 @@ $dark-grey-2: #757575;
     padding: 5px 0;
 
 }
-.calendar {
+.comp-datepicker{
+  *{
+    box-sizing: border-box;
+  }
+  .container {
+    @include position-center;
+  }
+  .calendar {
     display: flex;
     width: 100%;
     flex-direction: column;
@@ -209,67 +229,74 @@ $dark-grey-2: #757575;
       background: transparent;
     }
     .year-name {
-        @include header;
-        font-size: 10px;
-        .nav {
-            cursor: pointer;
-        }
+      @include header;
+      font-size: 10px;
+      .nav {
+        cursor: pointer;
+      }
     }
     .month-name {
-        @include header;
-        font-size: 15px;
-        .nav {
-            cursor: pointer;
-        }
+      @include header;
+      font-size: 15px;
+      .nav {
+        cursor: pointer;
+      }
     }
     .header-month {
-        display: flex;
-        flex-direction: row;
-        text-transform: uppercase;
+      display: flex;
+      flex-direction: row;
+      text-transform: uppercase;
+      background: #424242;
 
-        .day-of-week {
-            padding: 5px 0;
-            text-align: center;
-            background: #424242;
-            color: $white;
-            flex: 1 1 16px;
-        }
+      .day-of-week {
+        padding: 5px 0;
+        text-align: center;
+        color: $white;
+        flex: 1 1 16px;
+      }
     }
 
     .week {
+      display: flex;
+      flex-direction: row;
+      .day {
+        position: relative;
         display: flex;
-        flex-direction: row;
-        .day {
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex: 1 1 16px;
-            color: $dark-grey;
-            height: 25px;
-            cursor: pointer;
-            &.week-number {
-                background: $dark-grey;
-                color: $white;
-            }
-            &.today {
-                background: $red;
-                color: $white;
-                font-weight: bold;
-                border-radius: 100%;
-            }
+        justify-content: center;
+        align-items: center;
+        flex: 1 1 16px;
+        height: 25px;
+        cursor: pointer;
 
-            &.other {
-                background: $grey;
-                color: $dark-grey-2;
-
-                &.today {
-                    margin: 0;
-                    border-radius: 0;
-                    font-weight: normal;
-                }
-            }
+        &.today {
+          background-color: $red;
+          color: $white;
+          font-weight: bold;
+          border-radius: 100%;
         }
+        &.selected {
+          border: 1px solid $red;
+          font-weight: bold;
+          border-radius: 100%;
+        }
+
+        &.other {
+          background: $grey;
+          color: $dark-grey-2;
+
+          &.today {
+            margin: 0;
+            border-radius: 0;
+            font-weight: normal;
+          }
+        }
+      }
     }
+    .week-number {
+      background: $dark-grey;
+      color: $white;
+    }
+  }
+
 }
 </style>
