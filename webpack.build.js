@@ -18,7 +18,7 @@ devConfig.module.rules.push(stripLoader);
 devConfig.entry = './src/index.js'
 devConfig.output = {
   path:path.resolve(__dirname, 'static'),
-  filename:'haroru-vueDatePicker.js',
+  filename:'haroru-datepicker.js',
   library:'HaroruDatePicker',
   libraryTarget: 'umd'
 }
