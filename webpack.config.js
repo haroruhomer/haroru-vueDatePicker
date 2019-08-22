@@ -1,6 +1,9 @@
 var path    = require('path');
 var webpack = require('webpack');
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+    .BundleAnalyzerPlugin;
+const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
 
 module.exports = {
   devtool: 'source-map',
@@ -10,11 +13,6 @@ module.exports = {
     publicPath : '/static/',
 		filename:'bundle.js'
 	},
-	plugins : [
-    new webpack.ProvidePlugin({
-      Promise : 'es6-promise'
-    })
-  ],
   resolve: {
     extensions: ['.js', '.vue'],
     alias: {
@@ -48,7 +46,13 @@ module.exports = {
     ]
   },
   plugins : [
-    new VueLoaderPlugin()
+    new VueLoaderPlugin(),
+    new MomentLocalesPlugin({
+      localesToKeep: ['es', 'fr', 'de', 'it'],
+    }),
+    new BundleAnalyzerPlugin({
+		  openAnalyzer:  true, //para que nos muestre el resultado inmediatamente
+    })
   ],
   devServer: {
     port : 8070,
