@@ -1,11 +1,11 @@
 <template>
 <div class="comp-datepicker" >
   <input ref="input" type="text" @click.stop="show = !show" @blur="evaluateBlur" :name="name" v-model="value">
-  <div class='container' v-show="show">
+  <div class='container-calendar' v-show="show">
     <div class='calendar'>
       <div class='month-name'>
         <a class='nav previous' @click="changeMonth(-1)">&lt</a>
-        <div class='name'>{{currentNames.monthName}}-{{currentNames.selectedMonth}}</div>
+        <div class='name'>{{currentNames.monthName}}</div>
         <a class='nav next' @click="changeMonth(1)">&gt</a>
       </div>
       <div class='year-name'>
@@ -85,7 +85,6 @@ export default {
         dow : this.initialday
       }
     })
-    console.log(this.value);
     this.today = moment().format(this.format);
     if (!moment(this.selectedDate, this.format).isValid()) {
       this.selectedDate = this.today;
@@ -160,8 +159,8 @@ export default {
     },
     changeSelectedDate(date){
       this.show          = false
-      console.log(this.show);
       this.selectedDate  = date.format(this.format);
+      this.selectedMoment = moment(this.selectedDate, this.format);
     },
     evaluateBlur(event)
     {
@@ -214,8 +213,9 @@ $dark-grey-2: #a2a2a2;
 .comp-datepicker{
   *{
     box-sizing: border-box;
+    width: 16rem;
   }
-  .container {
+  .container-calendar {
     @include position-center;
   }
   .calendar {
@@ -225,8 +225,12 @@ $dark-grey-2: #a2a2a2;
     background: $light-grey;
     transition: 'height' 500ms;
     box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    cursor : default;
     .nav::selection{
       background: transparent;
+    }
+    .previous, .next{
+      width: 1rem;
     }
     .year-name {
       @include header;
@@ -247,7 +251,6 @@ $dark-grey-2: #a2a2a2;
       flex-direction: row;
       text-transform: uppercase;
       background: #424242;
-
       .day-of-week {
         padding: 5px 0;
         text-align: center;
@@ -295,6 +298,7 @@ $dark-grey-2: #a2a2a2;
     .week-number {
       background: $dark-grey;
       color: $white;
+      cursor: default !important;
     }
   }
 

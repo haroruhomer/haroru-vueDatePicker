@@ -17,7 +17,7 @@ var stripLoader = {
 devConfig.module.rules.push(stripLoader);
 devConfig.entry = './src/index.js'
 devConfig.output = {
-  path:path.resolve(__dirname, 'static'),
+  path:path.resolve(__dirname, 'dist'),
   filename:'haroru-datepicker.js',
   library:'HaroruDatePicker',
   libraryTarget: 'umd'

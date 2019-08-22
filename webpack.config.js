@@ -30,7 +30,6 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options : {
-            // presets: ['es2015'],
             plugins: ['@babel/plugin-transform-runtime']
           }
         }
@@ -51,18 +50,6 @@ module.exports = {
   plugins : [
     new VueLoaderPlugin()
   ],
-  // vue: {
-  //   autoprefixer: {
-  //     browsers: ['> 1%']
-  //   },
-  //   loaders: {
-  //     scss: 'style!css!sass'
-  //   }
-  // },
-  // babel: {
-  //   presets: ['es2015'],
-  //   plugins: ['transform-runtime']
-  // },
   devServer: {
     port : 8070,
     historyApiFallback: true,
