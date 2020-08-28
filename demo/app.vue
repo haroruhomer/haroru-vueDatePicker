@@ -9,7 +9,7 @@
 export default {
   data () {
     return {
-      modelo: "02/08/2019"
+      modelo: "02/08/2020"
     }
   },
   components : {

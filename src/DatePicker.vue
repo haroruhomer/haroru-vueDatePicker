@@ -1,6 +1,6 @@
 <template>
-<div class="comp-datepicker" >
-  <input ref="input" type="text" @click.stop="show = !show" @blur="evaluateBlur" :name="name" v-model="value">
+<div class="comp-datepicker" v-clickoutside="close">
+  <input ref="input" type="text" @click.stop="toggleShow" :name="name" v-model="value">
   <div class='container-calendar' v-show="show">
     <div class='calendar'>
       <div class='month-name'>
@@ -162,24 +162,34 @@ export default {
       this.selectedDate  = date.format(this.format);
       this.selectedMoment = moment(this.selectedDate, this.format);
     },
-    evaluateBlur(event)
+    close()
     {
-      let parent = event.explicitOriginalTarget.parentNode
-      let value = false
-      if (parent == document) {
-        value = false
-      }else {
-        if (parent.closest('.comp-datepicker')) {
-          value = true
-        }
-      }
-      this.show = value
-      return
+      this.show= false
+    },
+    toggleShow() {
+      this.show = !this.show
     }
   },
   watch: {
     selectedDate(val) {
       this.$emit('input', val)
+    }
+  },
+  directives: {
+    clickoutside:{
+      bind: function (el, bind, vm) {
+        el.clickOutsideEvent = function (event) {
+          // Check if click was outside the el and his children
+          if (!(el === event.target || el.contains(event.target))) {
+            // and if it did, call method provided in attribute value
+            vm.context[bind.expression](event);
+          }
+        };
+        document.body.addEventListener('click', el.clickOutsideEvent)
+      },
+      unbind: function (el) {
+        document.body.removeEventListener('click', el.clickOutsideEvent)
+      }
     }
   }
 }
@@ -188,9 +198,10 @@ export default {
 <style lang="scss">
 $red: #ab5955;
 $grey: #E0E0E0;
-$light-grey: #E0E0E0;
+$light-grey: #EFEFEF;
 $white: #FAFAFA;
-$dark-grey: #4d4d4d;
+$black: #2D2D2D;
+$dark-grey: #dfdfdf;
 $dark-grey-2: #a2a2a2;
 
 @mixin position-center() {
@@ -206,11 +217,12 @@ $dark-grey-2: #a2a2a2;
     text-transform: uppercase;
     font-weight: bold;
     background: $dark-grey;
-    color: $white;
+    color: $black;
     padding: 5px 0;
 
 }
 .comp-datepicker{
+  width: 100%;
   *{
     box-sizing: border-box;
     width: 16rem;
@@ -223,7 +235,6 @@ $dark-grey-2: #a2a2a2;
     width: 100%;
     flex-direction: column;
     background: $light-grey;
-    transition: 'height' 500ms;
     box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
     cursor : default;
     .nav::selection{
@@ -250,11 +261,11 @@ $dark-grey-2: #a2a2a2;
       display: flex;
       flex-direction: row;
       text-transform: uppercase;
-      background: #424242;
+      background: $dark-grey;
       .day-of-week {
         padding: 5px 0;
         text-align: center;
-        color: $white;
+        color: $black;
         flex: 1 1 16px;
       }
     }
@@ -297,7 +308,7 @@ $dark-grey-2: #a2a2a2;
     }
     .week-number {
       background: $dark-grey;
-      color: $white;
+      color: $black;
       cursor: default !important;
     }
   }
